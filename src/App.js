@@ -1,25 +1,39 @@
-import logo from './logo.svg';
+import React, {useState, memo, useMemo, useCallback} from "react";
 import './App.css';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const [appRenderIndex, setAppRenderIndex] = useState(0);
+    const [color, setColor] = useState("red");
+
+    console.log('App rendered', `${appRenderIndex}`);
+
+    const params = useMemo(() => ({color}), [color]);
+    const onClick = useCallback(() => {}, []);
+
+    return (
+        <div className="App">
+            <button onClick={() => setAppRenderIndex(appRenderIndex + 1)}>
+                Re-render App
+            </button>
+            <button onClick={() => setColor(color === "red" ? "green" : "red")}>
+                Change Color
+            </button>
+            <div>
+                <MemoizedChild params={params} onClick={onClick}/>
+            </div>
+        </div>
+    );
 }
+
+
+function Child({params, onClick}) {
+    console.log('Child rendered', `${params.color}`);
+
+    return (
+        <div style={{margin: 2, width: 75, height: 75, backgroundColor: params.color}}></div>
+    )
+}
+
+const MemoizedChild = memo(Child);
 
 export default App;
